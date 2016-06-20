@@ -23,14 +23,15 @@ patches = zeros(patchsize*patchsize, numpatches);
 %  more details.) As a second example, IMAGES(21:30,21:30,1) is an image
 %  patch corresponding to the pixels in the block (21,21) to (30,30) of
 %  Image 1
-
-
-
-
-
-
-
-
+for imageNum = 1:10%在每张图片中随机选取1000个patch，共10000个patch
+    [rowNum colNum] = size(IMAGES(:,:,imageNum));
+    for patchNum = 1:1000%实现每张图片选取1000个patch
+        xPos = randi([1,rowNum-patchsize+1]);
+        yPos = randi([1, colNum-patchsize+1]);
+        patches(:,(imageNum-1)*1000+patchNum) = reshape(IMAGES(xPos:xPos+7,yPos:yPos+7,...
+                                                        imageNum),64,1);
+    end
+end
 
 
 %% ---------------------------------------------------------------
@@ -54,7 +55,8 @@ patches = bsxfun(@minus, patches, mean(patches));
 
 % Truncate to +/-3 standard deviations and scale to -1 to 1
 pstd = 3 * std(patches(:));
-patches = max(min(patches, pstd), -pstd) / pstd;
+patches = max(min(patches, pstd), -pstd) / pstd;%因为根据3sigma法则，95%以上的数据都在该区域内
+                                                % 这里转换后将数据变到了-1到1之间
 
 % Rescale from [-1,1] to [0.1,0.9]
 patches = (patches + 1) * 0.4 + 0.1;

@@ -13,6 +13,7 @@ function [h, array] = display_network(A, opt_normalize, opt_graycolor, cols, opt
 % case, each row of A is a filter. Default value is false.
 warning off all
 
+%exist(A),测试A是否存在，'var'表示只检测变量
 if ~exist('opt_normalize', 'var') || isempty(opt_normalize)
     opt_normalize= true;
 end
@@ -28,17 +29,18 @@ end
 % rescale
 A = A - mean(A(:));
 
+%colormap(gray)表示用灰度场景
 if opt_graycolor, colormap(gray); end
 
 % compute rows, cols
 [L M]=size(A);
 sz=sqrt(L);
 buf=1;
-if ~exist('cols', 'var')
-    if floor(sqrt(M))^2 ~= M
+if ~exist('cols', 'var')%没有给定列数的情况下
+    if floor(sqrt(M))^2 ~= M %M不是平方数时
         n=ceil(sqrt(M));
         while mod(M, n)~=0 && n<1.2*sqrt(M), n=n+1; end
-        m=ceil(M/n);
+        m=ceil(M/n);%m是最终要的小patch图像的尺寸大小
     else
         n=sqrt(M);
         m=n;
@@ -90,7 +92,7 @@ else
 end
 
 if opt_graycolor
-    h=imagesc(array,'EraseMode','none',[-1 1]);
+    h=imagesc(array,'EraseMode','none',[-1 1]);%这里讲EraseMode设置为none,表示重绘时不擦除任何像素点
 else
     h=imagesc(array,'EraseMode','none',[-1 1]);
 end

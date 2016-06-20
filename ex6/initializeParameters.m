@@ -14,4 +14,3 @@ b2 = zeros(visibleSize, 1);
 theta = [W1(:) ; W2(:) ; b1(:) ; b2(:)];
 
 end
-
